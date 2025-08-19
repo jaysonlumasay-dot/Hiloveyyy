@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jayson's Love Game 💕</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <style>
+    /* GENERAL STYLES */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      text-align: center;
+      overflow: hidden;
+      transition: background 1s;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+    .card {
+      background: rgba(255,255,255,0.95);
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      max-width: 95%;
+      width: 360px;
+      animation: fadeIn 1s;
+    }
+    h1 {
+      font-size: 7vw;
+      margin-bottom: 10px;
+      color: #e91e63;
+      animation: popIn 0.8s;
+    }
+    p {
+      font-size: 4.5vw;
+      min-height: 40px;
+      color: #333;
+      animation: fadeIn 1.2s;
+    }
+    button {
+      margin: 10px;
+      padding: 16px 28px;
+      border: none;
+      border-radius: 15px;
+      font-size: 4.5vw;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      min-width: 120px;
+    }
+    button.yes {
+      background: #ff4081;
+      color: white;
+      box-shadow: 0 0 12px rgba(255,64,129,0.7);
+      animation: pulse 1.5s infinite;
+    }
+    button.no {
+      background: #ddd;
+      color: #333;
+    }
+    button:hover { transform: scale(1.05); }
+
+    /* HEARTS */
+    .heart {
+      position: fixed;
+      bottom: 0;
+      font-size: 24px;
+      animation: floatUp 3s linear forwards;
+      pointer-events: none;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-600px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="game">
+    <h1>Welcome 💕</h1>
+    <p id="message">Are you ready lovey cakes? 😘</p>
+    <button class="yes" onclick="nextLevel()">Start 💌</button>
+  </div>
+
+  <audio id="bgm" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    let level = 0;
+
+    function nextLevel() {
+      level++;
+      const game = document.getElementById("game");
+
+      if (level === 1) {
+        document.body.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
+        game.innerHTML = `
+          <h1>Level 1 💖</h1>
+          <p>Love ko nimo? 🥰</p>
+          <button class="yes" onclick="nextLevel()">Yes ❤️</button>
+          <button class="no" id="noBtn" onclick="shrinkNo()">No 🙈</button>
+        `;
+      } 
+      else if (level === 2) {
+        document.body.style.background = "linear-gradient(135deg, #a18cd1, #fbc2eb)";
+        game.innerHTML = `
+          <h1>Level 2 💜</h1>
+          <p>Yay! Charengs no choice HAHAHA 😘</p>
+          <button class="yes" onclick="nextLevel()">Next ➡️</button>
+        `;
+      } 
+      else if (level === 3) {
+        document.body.style.background = "linear-gradient(135deg, #84fab0, #8fd3f4)";
+        game.innerHTML = `
+          <h1>Level 3 💙</h1>
+          <p>PAKASAL TA SOON? 💍</p>
+          <button class="yes" onclick="nextLevel()">YES FOREVER ❤️</button>
+          <button class="no" id="noBtn" onclick="shrinkNo()">No 🙃</button>
+        `;
+      } 
+      else if (level === 4) {
+        document.body.style.background = "linear-gradient(135deg, #f6d365, #fda085)";
+        game.innerHTML = `
+          <h1>Level 4 💛</h1>
+          <p>GWAPA KAAYO KAAA </p>
+          <button class="yes" onclick="nextLevel()">Last Surprise 🎁</button>
+        `;
+      } 
+      else if (level === 5) {
+        document.body.style.background = "linear-gradient(135deg, #ff6a88, #ff99ac)";
+        game.innerHTML = `
+          <h1>Finale 🎉</h1>
+          <p>I LOVE YOU FOREVER 💖</p>
+          <button class="yes" onclick="spawnHearts()">Send Hearts ❤️</button>
+        `;
+        playMusic();
+      }
+    }
+
+    function spawnHearts() {
+      for (let i = 0; i < 60; i++) {
+        setTimeout(() => {
+          const heart = document.createElement("div");
+          heart.classList.add("heart");
+          heart.innerHTML = "❤️";
+          heart.style.left = Math.random() * window.innerWidth + "px";
+          heart.style.fontSize = Math.random() * 30 + 10 + "px";
+          document.body.appendChild(heart);
+          setTimeout(() => { heart.remove(); }, 3000);
+        }, i * 100);
+      }
+    }
+
+    function shrinkNo() {
+      const noBtn = document.getElementById("noBtn");
+      if (!noBtn) return;
+      let currentSize = parseFloat(window.getComputedStyle(noBtn).fontSize);
+      if (currentSize > 8) {
+        noBtn.style.fontSize = (currentSize - 2) + "px";
+        noBtn.style.padding = "6px 12px";
+      } else {
+        noBtn.innerText = "😅 Too late!";
+      }
+    }
+
+    function playMusic() {
+      const bgm = document.getElementById("bgm");
+      bgm.play().catch(() => console.log("Music blocked, needs tap."));
+    }
+  </script>
+</body>
+</html>
